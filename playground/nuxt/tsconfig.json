@@ -1,3 +1,9 @@
 {
-  "extends": "./.nuxt/tsconfig.json"
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@pinia/*": ["../../packages/pinia/packages/pinia/*"],
+      "@small-pinia/*": ["../../packages/small-pinia/*"]
+    }
+  }
 }

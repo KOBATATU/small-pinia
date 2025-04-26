@@ -3,6 +3,7 @@ import { fileURLToPath } from "url";
 
 const currentDir = dirname(fileURLToPath(import.meta.url));
 const piniaRoot = resolve(currentDir, "../../packages/pinia/packages/pinia");
+const smallPiniaRoot = resolve(currentDir, "../../packages/small-pinia");
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-04-12",
@@ -17,6 +18,7 @@ export default defineNuxtConfig({
   },
   alias: {
     "@pinia": piniaRoot,
+    "@small-pinia": smallPiniaRoot,
   },
   modules: ["@nuxt/eslint"],
 });
