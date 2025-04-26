@@ -1,0 +1,3 @@
+[submodule "packages/pinia"]
+	path = packages/pinia
+	url = git@github.com:vuejs/pinia.git
