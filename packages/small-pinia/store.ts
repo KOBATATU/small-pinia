@@ -1,9 +1,23 @@
 import { piniaSymbol, type Pinia } from "./rootStore";
+import type {
+  _ExtractActionsFromSetupStore,
+  _ExtractGettersFromSetupStore,
+  _ExtractStateFromSetupStore,
+  Store,
+} from "./types";
 
-export function defineStore(id: string, setup?: any) {
+export function defineStore<
+  Id extends string,
+  SS extends Record<PropertyKey, unknown>
+>(id: Id, setup: () => SS) {
   const isSetupStore = typeof setup === "function";
 
-  function useStore() {
+  function useStore(): Store<
+    Id,
+    _ExtractStateFromSetupStore<SS>,
+    _ExtractGettersFromSetupStore<SS>,
+    _ExtractActionsFromSetupStore<SS>
+  > {
     const pinia = inject(piniaSymbol, null);
     if (!pinia) {
       throw new Error("not call createPinia");
@@ -18,7 +32,12 @@ export function defineStore(id: string, setup?: any) {
       }
     }
 
-    const store: Record<string, any> = pinia._s.get(id)!;
+    const store = pinia._s.get(id)! as Store<
+      Id,
+      _ExtractStateFromSetupStore<SS>,
+      _ExtractGettersFromSetupStore<SS>,
+      _ExtractActionsFromSetupStore<SS>
+    >;
 
     return store;
   }
