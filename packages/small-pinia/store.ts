@@ -1,4 +1,9 @@
-import { piniaSymbol, type Pinia } from "./rootStore";
+import {
+  activePinia,
+  piniaSymbol,
+  setActivePinia,
+  type Pinia,
+} from "./rootStore";
 import type {
   _ExtractActionsFromSetupStore,
   _ExtractGettersFromSetupStore,
@@ -18,10 +23,19 @@ export function defineStore<
     _ExtractGettersFromSetupStore<SS>,
     _ExtractActionsFromSetupStore<SS>
   > {
-    const pinia = inject(piniaSymbol, null);
-    if (!pinia) {
-      throw new Error("not call createPinia");
+    const hasContext = hasInjectionContext();
+    let pinia = hasContext ? inject(piniaSymbol, null) : null;
+    if (pinia) {
+      setActivePinia(pinia);
     }
+
+    if (!activePinia) {
+      throw new Error(
+        `[🍍 smallPinia] Cannot get current Pinia instance. Did you forget to call "app.use(smallPinia)"?`
+      );
+    }
+
+    pinia = activePinia!;
 
     if (!pinia._s.has(id)) {
       if (isSetupStore) {
@@ -56,7 +70,6 @@ function createSetupStore<Id extends string, SS extends Record<any, unknown>>(
   };
   const store = reactive(partialStore);
 
-  // register store into the pinia
   pinia._s.set($id, store);
 
   const setupStore = setup();

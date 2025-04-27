@@ -7,3 +7,14 @@ export interface Pinia {
 }
 
 export const piniaSymbol = Symbol("smallPinia") as InjectionKey<Pinia>;
+
+export let activePinia: Pinia | undefined;
+
+//@ts-expect-error
+export const setActivePinia: _SetActivePinia = (pinia) => (activePinia = pinia);
+
+interface _SetActivePinia {
+  (pinia: Pinia): Pinia;
+  (pinia: undefined): undefined;
+  (pinia: Pinia | undefined): Pinia | undefined;
+}
