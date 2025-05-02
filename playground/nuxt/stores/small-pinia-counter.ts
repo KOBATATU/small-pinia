@@ -13,3 +13,21 @@ export const useCounterSmallStore = defineStore("counter", () => {
     increment,
   };
 });
+
+export const useCounterOptionsSmallStore = defineStore("options-counter", {
+  state: () => {
+    return {
+      count: 0,
+    };
+  },
+  getters: {
+    doubleCount(): number {
+      return this.count * 2;
+    },
+  },
+  actions: {
+    increment() {
+      this.count++;
+    },
+  },
+});

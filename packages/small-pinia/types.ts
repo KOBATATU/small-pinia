@@ -2,8 +2,8 @@ import type { ComputedRef, UnwrapRef } from "vue";
 import type { Pinia } from "./rootStore";
 
 export type StateTree = Record<PropertyKey, any>;
-
 export type _Method = (...args: any[]) => any;
+export type _ActionsTree = Record<string, _Method>;
 
 /**
  * Base properties common to all store instances.
@@ -28,6 +28,48 @@ export interface _SmallStoreWithState<
 > extends SmallStoreProperties<Id> {
   // $dispose and $patch utils type
 }
+
+export interface DefineStoreOptions<
+  Id extends string,
+  S extends StateTree,
+  G,
+  A
+> {
+  id: Id;
+
+  state?: () => S;
+
+  getters?: G & ThisType<UnwrapRef<S> & _StoreWithGetters<G>> & _GettersTree<S>;
+
+  actions?: A &
+    ThisType<
+      A &
+        UnwrapRef<S> &
+        _SmallStoreWithState<Id, S, G, A> &
+        _StoreWithGetters<G>
+    >;
+}
+
+export interface StoreDefinition<
+  Id extends string = string,
+  S extends StateTree = StateTree,
+  G = StateTree,
+  A = _ActionsTree
+> {
+  (): Store<Id, S, G, A>;
+
+  /**
+   * Unique identifier of the store.
+   */
+  $id: Id;
+}
+
+export type _GettersTree<S extends StateTree> = Record<
+  string,
+  ((state: UnwrapRef<S>) => any) | (() => any)
+>;
+
+export type StoreGeneric = Store<string, StateTree, StateTree, _ActionsTree>;
 
 /**
  * Getters become readonly properties.
