@@ -1,9 +1,10 @@
 import type { App, InjectionKey } from "vue";
+import type { StoreGeneric } from "./types";
 
 export interface Pinia {
   install: (app: App) => void;
 
-  _s: Map<string, any>;
+  _s: Map<string, StoreGeneric>;
 }
 
 export const piniaSymbol = Symbol("smallPinia") as InjectionKey<Pinia>;
